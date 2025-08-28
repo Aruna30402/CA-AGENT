@@ -8,14 +8,15 @@ import FeatureComparison from './components/FeatureComparison';
 import EnhancementSuggestions from './components/EnhancementSuggestions';
 import NotificationSettings from './components/NotificationSettings';
 import ExportShare from './components/ExportShare';
-import ChatInterface from './components/ChatInterface';
+import ChatSidebar from './components/ChatSidebar';
 import { ProductInput, Competitor, SwotAnalysis } from './types';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<'input' | 'selection' | 'analysis'>('input');
   const [productInput, setProductInput] = useState<ProductInput | null>(null);
   const [selectedCompetitors, setSelectedCompetitors] = useState<Competitor[]>([]);
-  const [activeTab, setActiveTab] = useState<'profiles' | 'swot' | 'comparison' | 'suggestions' | 'notifications' | 'export' | 'chat'>('profiles');
+  const [activeTab, setActiveTab] = useState<'profiles' | 'swot' | 'comparison' | 'suggestions' | 'notifications' | 'export'>('profiles');
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleProductSubmit = (input: ProductInput) => {
     setProductInput(input);
@@ -34,7 +35,6 @@ function App() {
     { id: 'suggestions', label: 'Enhancement Ideas', icon: Lightbulb },
     { id: 'notifications', label: 'Monitoring', icon: Bell },
     { id: 'export', label: 'Export & Share', icon: FileText },
-    { id: 'chat', label: 'AI Assistant', icon: MessageCircle },
   ];
 
   if (currentStep === 'input') {
@@ -99,6 +99,17 @@ function App() {
             >
               New Analysis
             </button>
+            <button
+              onClick={() => setIsChatOpen(!isChatOpen)}
+              className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                isChatOpen 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>AI Assistant</span>
+            </button>
           </div>
         </div>
       </header>
@@ -129,7 +140,9 @@ function App() {
       </nav>
 
       {/* Content */}
-      <main className="container mx-auto px-6 py-8">
+      <main className={`container mx-auto px-6 py-8 transition-all duration-300 ${
+        isChatOpen ? 'mr-80' : ''
+      }`}>
         {activeTab === 'profiles' && (
           <CompetitorProfiles competitors={selectedCompetitors} />
         )}
@@ -157,13 +170,15 @@ function App() {
             competitors={selectedCompetitors} 
           />
         )}
-        {activeTab === 'chat' && (
-          <ChatInterface 
-            productInput={productInput!}
-            competitors={selectedCompetitors} 
-          />
-        )}
       </main>
+
+      {/* Chat Sidebar */}
+      <ChatSidebar 
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        productInput={productInput!}
+        competitors={selectedCompetitors}
+      />
     </div>
   );
 }
