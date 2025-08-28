@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExternalLink, Building2, DollarSign, Users, Calendar, MapPin, TrendingUp, Banknote } from 'lucide-react';
+import { ExternalLink, Building2, DollarSign, Users, Calendar, MapPin, TrendingUp } from 'lucide-react';
 import { Competitor } from '../types';
 
 interface CompetitorProfilesProps {
@@ -91,14 +91,6 @@ export default function CompetitorProfiles({ competitors }: CompetitorProfilesPr
                   </div>
                   
                   <div className="flex items-center space-x-2">
-                    <Banknote className="w-4 h-4 text-gray-400" />
-                    <div>
-                      <div className="text-sm text-gray-500">Funding</div>
-                      <div className="font-medium text-gray-900">{competitor.keyInfo.funding}</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
                     <MapPin className="w-4 h-4 text-gray-400" />
                     <div>
                       <div className="text-sm text-gray-500">HQ</div>
@@ -107,12 +99,6 @@ export default function CompetitorProfiles({ competitors }: CompetitorProfilesPr
                   </div>
                 </div>
               </div>
-
-              {competitor.isCustom && (
-                <div className="mt-6 flex items-center space-x-2">
-                  <div className="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">
-                    Custom Added
-                  </div>
                   <span className="text-xs text-gray-500">
                     Some information may be limited for custom competitors
                   </span>

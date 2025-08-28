@@ -28,10 +28,8 @@ export default function CompetitorSelection({ productInput, onSelection, onBack 
           keyInfo: {
             founded: '2013',
             employees: '2,500+',
-            funding: '$1.4B',
             headquarters: 'San Francisco, CA'
           },
-          marketShare: '12.5%'
         },
         {
           id: 'microsoft-teams',
@@ -42,10 +40,8 @@ export default function CompetitorSelection({ productInput, onSelection, onBack 
           keyInfo: {
             founded: '2017',
             employees: '220,000+',
-            funding: 'Public (MSFT)',
             headquarters: 'Redmond, WA'
           },
-          marketShare: '45.8%'
         },
         {
           id: 'discord',
@@ -56,10 +52,8 @@ export default function CompetitorSelection({ productInput, onSelection, onBack 
           keyInfo: {
             founded: '2015',
             employees: '600+',
-            funding: '$995M',
             headquarters: 'San Francisco, CA'
           },
-          marketShare: '8.2%'
         },
         {
           id: 'zoom',
@@ -70,10 +64,8 @@ export default function CompetitorSelection({ productInput, onSelection, onBack 
           keyInfo: {
             founded: '2011',
             employees: '6,787',
-            funding: 'Public (ZM)',
             headquarters: 'San Jose, CA'
           },
-          marketShare: '33.1%'
         },
         {
           id: 'webex',
@@ -84,10 +76,8 @@ export default function CompetitorSelection({ productInput, onSelection, onBack 
           keyInfo: {
             founded: '1995',
             employees: '79,500+',
-            funding: 'Public (CSCO)',
             headquarters: 'San Jose, CA'
           },
-          marketShare: '15.3%'
         },
         {
           id: 'google-meet',
@@ -98,10 +88,8 @@ export default function CompetitorSelection({ productInput, onSelection, onBack 
           keyInfo: {
             founded: '2017',
             employees: '156,500+',
-            funding: 'Public (GOOGL)',
             headquarters: 'Mountain View, CA'
           },
-          marketShare: '18.7%'
         },
         {
           id: 'mattermost',
@@ -112,10 +100,8 @@ export default function CompetitorSelection({ productInput, onSelection, onBack 
           keyInfo: {
             founded: '2016',
             employees: '400+',
-            funding: '$70M',
             headquarters: 'Palo Alto, CA'
           },
-          marketShare: '2.1%'
         }
       ];
       setDiscoveredCompetitors(mockCompetitors);
@@ -152,7 +138,6 @@ export default function CompetitorSelection({ productInput, onSelection, onBack 
         keyInfo: {
           founded: new Date().getFullYear() - Math.floor(Math.random() * 10).toString(),
           employees: `${Math.floor(Math.random() * 1000) + 100}+`,
-          funding: 'Private',
           headquarters: 'Unknown'
         }
       };
@@ -243,9 +228,6 @@ export default function CompetitorSelection({ productInput, onSelection, onBack 
                       </div>
                       <div>
                         <h3 className="font-semibold text-gray-900">{competitor.name}</h3>
-                        {competitor.marketShare && (
-                          <p className="text-sm text-gray-500">{competitor.marketShare} market share</p>
-                        )}
                       </div>
                     </div>
                     <a

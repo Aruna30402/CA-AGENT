@@ -19,10 +19,8 @@ export interface Competitor {
   keyInfo: {
     founded: string;
     employees: string;
-    funding: string;
     headquarters: string;
   };
-  marketShare?: string;
   isCustom?: boolean;
 }
 
@@ -76,4 +74,17 @@ export interface CompetitorUpdate {
   description: string;
   date: string;
   url?: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  type: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
+
+export interface ChatSession {
+  id: string;
+  messages: ChatMessage[];
+  isActive: boolean;
 }

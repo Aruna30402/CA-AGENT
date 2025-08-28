@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Users, BarChart3, Lightbulb, Bell, FileText, Plus, ExternalLink, TrendingUp, Shield, AlertTriangle, Target } from 'lucide-react';
+import { Search, Users, BarChart3, Lightbulb, Bell, FileText, Plus, ExternalLink, TrendingUp, Shield, AlertTriangle, Target, MessageCircle } from 'lucide-react';
 import InputForm from './components/InputForm';
 import CompetitorSelection from './components/CompetitorSelection';
 import CompetitorProfiles from './components/CompetitorProfiles';
@@ -8,13 +8,14 @@ import FeatureComparison from './components/FeatureComparison';
 import EnhancementSuggestions from './components/EnhancementSuggestions';
 import NotificationSettings from './components/NotificationSettings';
 import ExportShare from './components/ExportShare';
+import ChatInterface from './components/ChatInterface';
 import { ProductInput, Competitor, SwotAnalysis } from './types';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<'input' | 'selection' | 'analysis'>('input');
   const [productInput, setProductInput] = useState<ProductInput | null>(null);
   const [selectedCompetitors, setSelectedCompetitors] = useState<Competitor[]>([]);
-  const [activeTab, setActiveTab] = useState<'profiles' | 'swot' | 'comparison' | 'suggestions' | 'notifications' | 'export'>('profiles');
+  const [activeTab, setActiveTab] = useState<'profiles' | 'swot' | 'comparison' | 'suggestions' | 'notifications' | 'export' | 'chat'>('profiles');
 
   const handleProductSubmit = (input: ProductInput) => {
     setProductInput(input);
@@ -33,6 +34,7 @@ function App() {
     { id: 'suggestions', label: 'Enhancement Ideas', icon: Lightbulb },
     { id: 'notifications', label: 'Monitoring', icon: Bell },
     { id: 'export', label: 'Export & Share', icon: FileText },
+    { id: 'chat', label: 'AI Assistant', icon: MessageCircle },
   ];
 
   if (currentStep === 'input') {
@@ -151,6 +153,12 @@ function App() {
         )}
         {activeTab === 'export' && (
           <ExportShare 
+            productInput={productInput!}
+            competitors={selectedCompetitors} 
+          />
+        )}
+        {activeTab === 'chat' && (
+          <ChatInterface 
             productInput={productInput!}
             competitors={selectedCompetitors} 
           />
