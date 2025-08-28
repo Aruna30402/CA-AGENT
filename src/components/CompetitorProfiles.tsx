@@ -99,6 +99,9 @@ export default function CompetitorProfiles({ competitors }: CompetitorProfilesPr
                   </div>
                 </div>
               </div>
+              
+              {competitor.isCustom && (
+                <div className="mt-4 pt-4 border-t border-gray-100">
                   <span className="text-xs text-gray-500">
                     Some information may be limited for custom competitors
                   </span>
