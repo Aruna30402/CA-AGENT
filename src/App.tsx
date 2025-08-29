@@ -141,7 +141,7 @@ function App() {
 
       {/* Content */}
       <main className={`container mx-auto px-6 py-8 transition-all duration-300 ${
-        isChatOpen ? 'mr-80' : ''
+        isChatOpen ? 'mr-96' : ''
       }`}>
         {activeTab === 'profiles' && (
           <CompetitorProfiles competitors={selectedCompetitors} />

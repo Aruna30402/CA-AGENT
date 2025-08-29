@@ -8,19 +8,80 @@ interface FeatureComparisonProps {
   competitors: Competitor[];
 }
 
-const FEATURE_NAMES = [
-  'Main functionalities',
-  'Unique features',
-  'Target customer',
-  'ICP',
-  'Usability',
-  'Integrations',
-  'Overall performance',
-  'Pricing',
-  'Data export options',
-  'Geographic focus',
-  'Partnerships (tech partners)',
-];
+const FEATURE_CATEGORIES = {
+  'Core Communication': [
+    'Real-time messaging',
+    'Video conferencing (max participants)',
+    'Voice calls & channels',
+    'Screen sharing',
+    'File sharing & storage',
+    'Message threading',
+    'Direct messaging',
+    'Group messaging',
+  ],
+  'Collaboration Features': [
+    'Channel organization',
+    'Workspace management',
+    'Message reactions & emoji',
+    'Message editing & deletion',
+    'Message search functionality',
+    'Mentions & notifications',
+    'Status indicators',
+    'Presence awareness',
+  ],
+  'Advanced Features': [
+    'Workflow automation',
+    'Custom bots & apps',
+    'API access',
+    'Webhook support',
+    'Custom integrations',
+    'Advanced admin controls',
+    'Analytics & reporting',
+    'Message scheduling',
+  ],
+  'Enterprise & Security': [
+    'Single Sign-On (SSO)',
+    'Two-factor authentication',
+    'Enterprise key management',
+    'Compliance certifications',
+    'Data loss prevention',
+    'Audit logs',
+    'Guest access controls',
+    'Data retention policies',
+  ],
+  'Platform & Performance': [
+    'Mobile app quality',
+    'Desktop app availability',
+    'Web app performance',
+    'Offline functionality',
+    'Multi-device sync',
+    'Load time performance',
+    'Uptime reliability',
+    'Large team support (1000+ users)',
+  ],
+  'Integrations & Ecosystem': [
+    'Third-party app marketplace',
+    'CRM integrations',
+    'Project management tools',
+    'Calendar integrations',
+    'Email integrations',
+    'Development tools (GitHub, Jira)',
+    'Google Workspace integration',
+    'Microsoft 365 integration',
+  ],
+  'Pricing & Business': [
+    'Free tier available',
+    'Transparent pricing',
+    'Per-user pricing model',
+    'Enterprise pricing flexibility',
+    'Annual discount options',
+    'Non-profit pricing',
+    'Educational discounts',
+    'Usage-based billing',
+  ]
+};
+
+const ALL_FEATURES = Object.values(FEATURE_CATEGORIES).flat();
 
 export default function FeatureComparison({ productInput, competitors }: FeatureComparisonProps) {
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set(['all']));
@@ -46,35 +107,27 @@ export default function FeatureComparison({ productInput, competitors }: Feature
 
   const categories = {
     all: 'All Features',
-    functionality: 'Main Functionalities',
-    unique: 'Unique Features',
-    target: 'Target Customer & ICP',
-    usability: 'Usability',
-    integrations: 'Integrations',
-    performance: 'Performance',
-    pricing: 'Pricing',
-    export: 'Data Export',
-    geographic: 'Geographic Focus',
-    partnerships: 'Partnerships'
+    'Core Communication': 'Core Communication',
+    'Collaboration Features': 'Collaboration Features',
+    'Advanced Features': 'Advanced Features',
+    'Enterprise & Security': 'Enterprise & Security',
+    'Platform & Performance': 'Platform & Performance',
+    'Integrations & Ecosystem': 'Integrations & Ecosystem',
+    'Pricing & Business': 'Pricing & Business'
   };
 
   const getCategoryForFeature = (feature: string): string => {
-    if (['Real-time messaging', 'Video conferencing', 'File sharing', 'Screen sharing'].includes(feature)) return 'functionality';
-    if (['Channel organization', 'Workflow automation', 'Custom emoji/reactions', 'Voice channels'].includes(feature)) return 'unique';
-    if (['Enterprise focus', 'SMB friendly', 'Gaming/Creative focus'].includes(feature)) return 'target';
-    if (['Mobile app quality', 'Search functionality', 'Onboarding experience'].includes(feature)) return 'usability';
-    if (['Third-party apps', 'API quality', 'Webhook support'].includes(feature)) return 'integrations';
-    if (['Reliability uptime', 'Load time performance', 'Large group support'].includes(feature)) return 'performance';
-    if (['Free tier available', 'Starting price', 'Enterprise pricing'].includes(feature)) return 'pricing';
-    if (['Data export options', 'GDPR compliance', 'Data retention controls'].includes(feature)) return 'export';
-    if (['Global availability', 'Multi-language support', 'Local data centers'].includes(feature)) return 'geographic';
-    if (['Tech partnerships', 'Reseller network'].includes(feature)) return 'partnerships';
+    for (const [category, features] of Object.entries(FEATURE_CATEGORIES)) {
+      if (features.includes(feature)) {
+        return category;
+      }
+    }
     return 'all';
   };
 
   const filteredFeatures = selectedCategories.has('all') 
-    ? allFeatures 
-    : allFeatures.filter(f => Array.from(selectedCategories).some(cat => getCategoryForFeature(f) === cat));
+    ? ALL_FEATURES 
+    : ALL_FEATURES.filter(f => Array.from(selectedCategories).some(cat => getCategoryForFeature(f) === cat));
 
   const renderValue = (value: string | boolean) => {
     if (typeof value === 'boolean') {
@@ -92,20 +145,268 @@ export default function FeatureComparison({ productInput, competitors }: Feature
 
   // Helper to get feature value for input product
   const getProductFeatureValue = (feature: string) => {
-    // Example: use boolean fields from productInput, or fallback to random
-    // You should map your actual productInput fields here
-    return productInput?.[feature.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()] ?? Math.random() > 0.5;
+    // Simulate realistic feature availability for user's product
+    const featureMap: Record<string, boolean> = {
+      'Real-time messaging': true,
+      'Video conferencing (max participants)': true,
+      'Voice calls & channels': true,
+      'Screen sharing': true,
+      'File sharing & storage': true,
+      'Message threading': true,
+      'Direct messaging': true,
+      'Group messaging': true,
+      'Channel organization': true,
+      'Workspace management': true,
+      'Message reactions & emoji': true,
+      'Message editing & deletion': true,
+      'Message search functionality': false,
+      'Mentions & notifications': true,
+      'Status indicators': true,
+      'Presence awareness': true,
+      'Workflow automation': false,
+      'Custom bots & apps': false,
+      'API access': true,
+      'Webhook support': false,
+      'Custom integrations': false,
+      'Advanced admin controls': false,
+      'Analytics & reporting': false,
+      'Message scheduling': false,
+      'Single Sign-On (SSO)': false,
+      'Two-factor authentication': true,
+      'Enterprise key management': false,
+      'Compliance certifications': false,
+      'Data loss prevention': false,
+      'Audit logs': false,
+      'Guest access controls': true,
+      'Data retention policies': false,
+      'Mobile app quality': true,
+      'Desktop app availability': true,
+      'Web app performance': true,
+      'Offline functionality': false,
+      'Multi-device sync': true,
+      'Load time performance': true,
+      'Uptime reliability': true,
+      'Large team support (1000+ users)': false,
+      'Third-party app marketplace': false,
+      'CRM integrations': false,
+      'Project management tools': true,
+      'Calendar integrations': true,
+      'Email integrations': true,
+      'Development tools (GitHub, Jira)': false,
+      'Google Workspace integration': true,
+      'Microsoft 365 integration': false,
+      'Free tier available': true,
+      'Transparent pricing': true,
+      'Per-user pricing model': true,
+      'Enterprise pricing flexibility': false,
+      'Annual discount options': true,
+      'Non-profit pricing': false,
+      'Educational discounts': false,
+      'Usage-based billing': false,
+    };
+    return featureMap[feature] ?? false;
   };
 
   // Helper to get feature value for competitors (randomly assign for demo)
   const getCompetitorFeatureValue = (competitorId: string, feature: string) => {
-    // For demo, randomly assign true/false
-    return Math.random() > 0.4;
+    // Simulate realistic competitor feature sets
+    const competitorFeatures: Record<string, Record<string, boolean>> = {
+      'slack': {
+        'Real-time messaging': true,
+        'Video conferencing (max participants)': true,
+        'Voice calls & channels': true,
+        'Screen sharing': true,
+        'File sharing & storage': true,
+        'Message threading': true,
+        'Direct messaging': true,
+        'Group messaging': true,
+        'Channel organization': true,
+        'Workspace management': true,
+        'Message reactions & emoji': true,
+        'Message editing & deletion': true,
+        'Message search functionality': true,
+        'Mentions & notifications': true,
+        'Status indicators': true,
+        'Presence awareness': true,
+        'Workflow automation': true,
+        'Custom bots & apps': true,
+        'API access': true,
+        'Webhook support': true,
+        'Custom integrations': true,
+        'Advanced admin controls': true,
+        'Analytics & reporting': true,
+        'Message scheduling': true,
+        'Single Sign-On (SSO)': true,
+        'Two-factor authentication': true,
+        'Enterprise key management': true,
+        'Compliance certifications': true,
+        'Data loss prevention': true,
+        'Audit logs': true,
+        'Guest access controls': true,
+        'Data retention policies': true,
+        'Mobile app quality': true,
+        'Desktop app availability': true,
+        'Web app performance': true,
+        'Offline functionality': false,
+        'Multi-device sync': true,
+        'Load time performance': true,
+        'Uptime reliability': true,
+        'Large team support (1000+ users)': true,
+        'Third-party app marketplace': true,
+        'CRM integrations': true,
+        'Project management tools': true,
+        'Calendar integrations': true,
+        'Email integrations': true,
+        'Development tools (GitHub, Jira)': true,
+        'Google Workspace integration': true,
+        'Microsoft 365 integration': false,
+        'Free tier available': true,
+        'Transparent pricing': true,
+        'Per-user pricing model': true,
+        'Enterprise pricing flexibility': true,
+        'Annual discount options': true,
+        'Non-profit pricing': true,
+        'Educational discounts': true,
+        'Usage-based billing': false,
+      },
+      'microsoft-teams': {
+        'Real-time messaging': true,
+        'Video conferencing (max participants)': true,
+        'Voice calls & channels': true,
+        'Screen sharing': true,
+        'File sharing & storage': true,
+        'Message threading': true,
+        'Direct messaging': true,
+        'Group messaging': true,
+        'Channel organization': true,
+        'Workspace management': true,
+        'Message reactions & emoji': true,
+        'Message editing & deletion': true,
+        'Message search functionality': true,
+        'Mentions & notifications': true,
+        'Status indicators': true,
+        'Presence awareness': true,
+        'Workflow automation': true,
+        'Custom bots & apps': true,
+        'API access': true,
+        'Webhook support': true,
+        'Custom integrations': true,
+        'Advanced admin controls': true,
+        'Analytics & reporting': true,
+        'Message scheduling': false,
+        'Single Sign-On (SSO)': true,
+        'Two-factor authentication': true,
+        'Enterprise key management': true,
+        'Compliance certifications': true,
+        'Data loss prevention': true,
+        'Audit logs': true,
+        'Guest access controls': true,
+        'Data retention policies': true,
+        'Mobile app quality': true,
+        'Desktop app availability': true,
+        'Web app performance': true,
+        'Offline functionality': true,
+        'Multi-device sync': true,
+        'Load time performance': false,
+        'Uptime reliability': true,
+        'Large team support (1000+ users)': true,
+        'Third-party app marketplace': false,
+        'CRM integrations': true,
+        'Project management tools': true,
+        'Calendar integrations': true,
+        'Email integrations': true,
+        'Development tools (GitHub, Jira)': true,
+        'Google Workspace integration': false,
+        'Microsoft 365 integration': true,
+        'Free tier available': true,
+        'Transparent pricing': true,
+        'Per-user pricing model': true,
+        'Enterprise pricing flexibility': true,
+        'Annual discount options': true,
+        'Non-profit pricing': true,
+        'Educational discounts': true,
+        'Usage-based billing': false,
+      }
+    };
+    
+    // Default feature set for other competitors
+    const defaultFeatures: Record<string, boolean> = {
+      'Real-time messaging': true,
+      'Video conferencing (max participants)': Math.random() > 0.2,
+      'Voice calls & channels': Math.random() > 0.3,
+      'Screen sharing': Math.random() > 0.2,
+      'File sharing & storage': Math.random() > 0.1,
+      'Message threading': Math.random() > 0.4,
+      'Direct messaging': true,
+      'Group messaging': true,
+      'Channel organization': Math.random() > 0.3,
+      'Workspace management': Math.random() > 0.4,
+      'Message reactions & emoji': Math.random() > 0.3,
+      'Message editing & deletion': Math.random() > 0.2,
+      'Message search functionality': Math.random() > 0.4,
+      'Mentions & notifications': Math.random() > 0.2,
+      'Status indicators': Math.random() > 0.3,
+      'Presence awareness': Math.random() > 0.3,
+      'Workflow automation': Math.random() > 0.6,
+      'Custom bots & apps': Math.random() > 0.5,
+      'API access': Math.random() > 0.3,
+      'Webhook support': Math.random() > 0.4,
+      'Custom integrations': Math.random() > 0.4,
+      'Advanced admin controls': Math.random() > 0.5,
+      'Analytics & reporting': Math.random() > 0.6,
+      'Message scheduling': Math.random() > 0.7,
+      'Single Sign-On (SSO)': Math.random() > 0.4,
+      'Two-factor authentication': Math.random() > 0.3,
+      'Enterprise key management': Math.random() > 0.6,
+      'Compliance certifications': Math.random() > 0.5,
+      'Data loss prevention': Math.random() > 0.6,
+      'Audit logs': Math.random() > 0.5,
+      'Guest access controls': Math.random() > 0.4,
+      'Data retention policies': Math.random() > 0.5,
+      'Mobile app quality': Math.random() > 0.3,
+      'Desktop app availability': Math.random() > 0.2,
+      'Web app performance': Math.random() > 0.3,
+      'Offline functionality': Math.random() > 0.7,
+      'Multi-device sync': Math.random() > 0.3,
+      'Load time performance': Math.random() > 0.4,
+      'Uptime reliability': Math.random() > 0.2,
+      'Large team support (1000+ users)': Math.random() > 0.4,
+      'Third-party app marketplace': Math.random() > 0.6,
+      'CRM integrations': Math.random() > 0.4,
+      'Project management tools': Math.random() > 0.3,
+      'Calendar integrations': Math.random() > 0.3,
+      'Email integrations': Math.random() > 0.4,
+      'Development tools (GitHub, Jira)': Math.random() > 0.4,
+      'Google Workspace integration': Math.random() > 0.5,
+      'Microsoft 365 integration': Math.random() > 0.6,
+      'Free tier available': Math.random() > 0.4,
+      'Transparent pricing': Math.random() > 0.3,
+      'Per-user pricing model': Math.random() > 0.2,
+      'Enterprise pricing flexibility': Math.random() > 0.5,
+      'Annual discount options': Math.random() > 0.3,
+      'Non-profit pricing': Math.random() > 0.6,
+      'Educational discounts': Math.random() > 0.5,
+      'Usage-based billing': Math.random() > 0.7,
+    };
+    
+    return competitorFeatures[competitorId]?.[feature] ?? defaultFeatures[feature] ?? false;
   };
 
-  const selectedCompetitors = competitors.slice(0, 5); // Limit to 5 for table width
+  const getFilteredFeatures = () => {
+    if (selectedCategories.has('all')) {
+      return FEATURE_CATEGORIES;
+    }
+    
+    const filtered: Record<string, string[]> = {};
+    for (const category of selectedCategories) {
+      if (FEATURE_CATEGORIES[category]) {
+        filtered[category] = FEATURE_CATEGORIES[category];
+      }
+    }
+    return filtered;
+  };
 
-  return (
+  const filteredFeatureCategories = getFilteredFeatures();
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">Feature Comparison</h2>
@@ -156,10 +457,10 @@ export default function FeatureComparison({ productInput, competitors }: Feature
       {/* Comparison Table */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[800px]">
+          <table className="w-full min-w-[1000px]">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 w-64">
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 w-80">
                   Feature
                 </th>
                 <th className="px-4 py-3 text-center text-sm font-semibold text-blue-600 min-w-32">
@@ -173,7 +474,14 @@ export default function FeatureComparison({ productInput, competitors }: Feature
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {FEATURE_NAMES.map((feature) => (
+              {Object.entries(filteredFeatureCategories).map(([category, features]) => (
+                <React.Fragment key={category}>
+                  <tr className="bg-gray-100">
+                    <td colSpan={selectedCompetitors.length + 2} className="px-6 py-3 text-sm font-bold text-gray-900 uppercase tracking-wide">
+                      {category}
+                    </td>
+                  </tr>
+                  {features.map((feature) => (
                 <tr key={feature} className="hover:bg-gray-50">
                   <td className="px-6 py-4 text-sm font-medium text-gray-900">
                     {feature}
@@ -195,6 +503,8 @@ export default function FeatureComparison({ productInput, competitors }: Feature
                     </td>
                   ))}
                 </tr>
+                  ))}
+                </React.Fragment>
               ))}
             </tbody>
           </table>
