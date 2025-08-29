@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, MessageCircle, Bot, User, Lightbulb, BarChart3, Users, TrendingUp, X } from 'lucide-react';
+import { Send, MessageCircle, Bot, User, Lightbulb, BarChart3, Users, TrendingUp, X, Shield, Target, AlertTriangle, Zap } from 'lucide-react';
 import { ProductInput, Competitor, ChatMessage } from '../types';
 
 interface ChatSidebarProps {
@@ -14,7 +14,7 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
     {
       id: '1',
       type: 'assistant',
-      content: `Hello! I'm your AI assistant for competitor analysis. I can help you understand insights about ${productInput.productName || 'your product'} and your ${competitors.length} tracked competitors. What would you like to know?`,
+      content: `Hello! I'm your AI assistant for competitor analysis. I can help you understand insights about ${productInput.productName || 'your product'} and your ${competitors.length} tracked competitors. Ask me anything about their strengths, weaknesses, opportunities, threats, pricing, features, or market positioning!`,
       timestamp: new Date()
     }
   ]);
@@ -32,41 +32,82 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
 
   const generateResponse = (userMessage: string): string => {
     const message = userMessage.toLowerCase();
+    const competitorNames = competitors.map(c => c.name).join(', ');
+    
+    // SWOT Analysis questions
+    if (message.includes('strength') || message.includes('strong')) {
+      return `Based on the analysis, key competitor strengths include: **Brand Recognition** - ${competitors[0]?.name || 'Leading competitors'} have established strong market presence. **Integration Ecosystem** - Most competitors offer extensive third-party integrations. **Performance Reliability** - They maintain high uptime and consistent service quality. **Customer Support** - Well-developed support infrastructure with multiple channels. These strengths help them maintain competitive advantages in the market.`;
+    }
+    
+    if (message.includes('weakness') || message.includes('weak')) {
+      return `Common competitor weaknesses I've identified: **Limited Customization** - Many competitors restrict customization options, frustrating power users. **Complex Pricing** - Confusing pricing tiers make it hard for small businesses to choose plans. **Mobile Performance** - Several competitors struggle with mobile app quality and performance. **Offline Functionality** - Most require constant internet connectivity. These weaknesses present opportunities for your product to differentiate.`;
+    }
+    
+    if (message.includes('opportunit') || message.includes('growth')) {
+      return `Major market opportunities include: **AI Integration** - Huge potential for AI-powered features like smart summarization and automated workflows. **Emerging Markets** - Growing demand in developing regions with less competition. **Small Business Focus** - Underserved SMB market needs simpler, more affordable solutions. **Industry Specialization** - Vertical solutions for healthcare, education, and finance sectors. **Remote Work Trends** - Continued growth in remote collaboration needs.`;
+    }
+    
+    if (message.includes('threat') || message.includes('risk')) {
+      return `Key market threats to watch: **Tech Giant Competition** - Microsoft, Google, and Apple are heavily investing in collaboration tools. **Economic Pressure** - Businesses may reduce software spending during economic uncertainty. **Regulatory Changes** - Stricter data privacy laws increase compliance costs. **Open Source Alternatives** - Free solutions like Mattermost are becoming more sophisticated. **Market Saturation** - The collaboration space is becoming increasingly crowded.`;
+    }
     
     // Competitor-specific questions
     if (message.includes('competitor') || message.includes('compare')) {
-      const competitorNames = competitors.map(c => c.name).join(', ');
-      return `Based on your analysis, you're tracking ${competitors.length} main competitors: ${competitorNames}. Each has different strengths - for example, some focus on enterprise features while others target smaller teams. Would you like me to dive deeper into any specific competitor or comparison?`;
+      return `You're tracking ${competitors.length} main competitors: ${competitorNames}. Each has different positioning - some focus on enterprise features while others target smaller teams. **Slack** excels in user experience and integrations. **Microsoft Teams** leverages Office 365 integration. **Discord** dominates gaming/creative communities. **Zoom** leads in video conferencing quality. Would you like me to dive deeper into any specific competitor?`;
     }
     
     // Pricing questions
     if (message.includes('price') || message.includes('pricing') || message.includes('cost')) {
       const pricingInfo = competitors.map(c => `${c.name}: ${c.pricing.startingPrice} ${c.pricing.currency} (${c.pricing.model})`).join(', ');
-      return `Here's the pricing breakdown for your competitors: ${pricingInfo}. This shows a range of pricing strategies from freemium to premium subscription models. Consider how your pricing compares and what value proposition you can offer.`;
+      return `Here's the competitive pricing landscape: ${pricingInfo}. **Key insights**: Microsoft Teams offers the most aggressive pricing at $4/month. Slack commands premium pricing due to brand strength. Discord and Mattermost use freemium models effectively. **Recommendation**: Consider positioning between $5-8/month for SMBs with clear value differentiation.`;
     }
     
     // Feature questions
     if (message.includes('feature') || message.includes('functionality')) {
-      return `Your competitors offer various features like real-time messaging, video conferencing, file sharing, and integrations. Key differentiators include workflow automation, AI-powered features, and mobile experience quality. Would you like me to analyze specific features or suggest improvements for your product?`;
+      return `**Core features** across competitors include real-time messaging, video conferencing, file sharing, and integrations. **Differentiators** include: Slack's workflow automation, Teams' Office integration, Discord's voice channels, Zoom's video quality. **Gaps I've identified**: Better mobile experience, simpler onboarding, industry-specific features, and more intuitive AI assistance. Focus on these gaps for competitive advantage.`;
     }
     
     // Market questions
-    if (message.includes('market') || message.includes('opportunity')) {
-      return `The ${productInput.marketSegment === 'b2b' ? 'B2B' : productInput.marketSegment === 'b2c' ? 'B2C' : ''} communication and collaboration market is highly competitive. Key opportunities include better mobile experiences, AI integration, improved security features, and specialized solutions for specific industries. Your competitors show varying approaches to these areas.`;
+    if (message.includes('market') || message.includes('segment')) {
+      const segment = productInput.marketSegment === 'b2b' ? 'B2B' : productInput.marketSegment === 'b2c' ? 'B2C' : 'your target';
+      return `The ${segment} collaboration market is highly competitive but growing. **Market size**: $47B+ globally with 12% annual growth. **Key trends**: Remote work normalization, AI integration demand, security focus, mobile-first usage. **Your positioning**: ${segment} market offers opportunities in underserved niches like industry-specific solutions or simplified user experiences.`;
     }
     
-    // Strengths/weaknesses
-    if (message.includes('strength') || message.includes('weakness') || message.includes('swot')) {
-      return `From the SWOT analysis, common competitor strengths include established user bases, strong integrations, and reliable performance. Common weaknesses are limited customization, high pricing for small teams, and mobile app issues. This presents opportunities for you to differentiate with better user experience and competitive pricing.`;
+    // Strategy questions
+    if (message.includes('strategy') || message.includes('recommend') || message.includes('suggest')) {
+      return `**Strategic recommendations** based on competitive analysis: 1) **Focus on mobile-first design** - most competitors struggle here. 2) **Simplify pricing** - avoid complex tier structures. 3) **Industry specialization** - target specific verticals like healthcare or education. 4) **AI-first approach** - integrate AI more deeply than competitors. 5) **Superior onboarding** - reduce time-to-value vs competitors. Which area interests you most?`;
     }
     
-    // Suggestions/recommendations
-    if (message.includes('suggest') || message.includes('recommend') || message.includes('improve')) {
-      return `Based on the competitive analysis, I recommend focusing on: 1) Enhanced mobile experience - many competitors struggle here, 2) AI-powered features for productivity, 3) Competitive pricing for small businesses, 4) Better onboarding and user experience, 5) Specialized features for your target market. Which area interests you most?`;
+    // Performance questions
+    if (message.includes('performance') || message.includes('speed') || message.includes('reliability')) {
+      return `**Performance benchmarks**: Most competitors maintain 99.9% uptime, but user experience varies. **Slack** has excellent search performance but can slow with large teams. **Teams** integrates well but can be resource-heavy. **Discord** handles large voice groups well. **Zoom** leads in video quality. **Opportunity**: Focus on consistent performance across all features, especially for large organizations.`;
     }
     
-    // Default response
-    return `I can help you with insights about your competitors, pricing strategies, feature comparisons, market opportunities, and enhancement suggestions. Try asking me about specific competitors, pricing analysis, or what improvements you should consider for your product.`;
+    // Security questions
+    if (message.includes('security') || message.includes('privacy') || message.includes('compliance')) {
+      return `**Security landscape**: Enterprise competitors prioritize SOC 2, GDPR, HIPAA compliance. **Leaders**: Microsoft Teams and Webex excel in enterprise security. **Gaps**: Many struggle with user-friendly security (complex admin panels). **Opportunity**: Combine enterprise-grade security with consumer-grade usability. Focus on transparent privacy practices and simplified compliance management.`;
+    }
+    
+    // User experience questions
+    if (message.includes('user') || message.includes('experience') || message.includes('usability')) {
+      return `**UX analysis**: **Slack** sets the gold standard for intuitive design. **Discord** excels in community features. **Teams** struggles with complexity. **Common issues**: Overwhelming interfaces, poor mobile experiences, complex onboarding. **Your advantage**: Focus on simplicity, faster onboarding (under 5 minutes), and mobile-first design. Users want powerful features without complexity.`;
+    }
+    
+    // Integration questions
+    if (message.includes('integration') || message.includes('api') || message.includes('connect')) {
+      return `**Integration ecosystem**: **Slack** leads with 2,000+ apps. **Teams** leverages Microsoft ecosystem. **Others** have 100-500 integrations. **Key categories**: CRM (Salesforce, HubSpot), Project Management (Asana, Trello), Development (GitHub, Jira). **Strategy**: Focus on quality over quantity - ensure top 50 integrations work flawlessly rather than having thousands of mediocre ones.`;
+    }
+    
+    // Default comprehensive response
+    return `I can help you with detailed insights about your competitive landscape. **Available analysis**: 
+    
+    🛡️ **SWOT Analysis** - Strengths, weaknesses, opportunities, and threats for each competitor
+    💰 **Pricing Strategy** - Competitive pricing analysis and recommendations  
+    ⚡ **Feature Gaps** - Opportunities where competitors fall short
+    📊 **Market Positioning** - How competitors position themselves and where you can differentiate
+    🎯 **Strategic Recommendations** - Actionable insights for your product strategy
+    
+    Try asking about specific areas like "What are Slack's main weaknesses?" or "What pricing strategy should I consider?" I'm here to help you make informed strategic decisions!`;
   };
 
   const handleSendMessage = async () => {
@@ -105,10 +146,12 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
   };
 
   const quickQuestions = [
-    { icon: Users, text: "Main competitors", query: "Who are my main competitors and what are their key strengths?" },
-    { icon: TrendingUp, text: "Pricing analysis", query: "How does competitor pricing compare and what should I consider?" },
-    { icon: Lightbulb, text: "Improvements", query: "What improvements should I make based on competitor analysis?" },
-    { icon: BarChart3, text: "Opportunities", query: "What market opportunities can I identify from this analysis?" }
+    { icon: Shield, text: "Competitor strengths", query: "What are the main strengths of my competitors?" },
+    { icon: AlertTriangle, text: "Market threats", query: "What threats should I be aware of in this market?" },
+    { icon: TrendingUp, text: "Growth opportunities", query: "What opportunities exist for growth and differentiation?" },
+    { icon: Target, text: "Strategic recommendations", query: "What strategic recommendations do you have based on this analysis?" },
+    { icon: BarChart3, text: "Pricing strategy", query: "How should I position my pricing against competitors?" },
+    { icon: Zap, text: "Feature gaps", query: "What feature gaps exist that I could exploit?" }
   ];
 
   if (!isOpen) return null;
@@ -122,8 +165,8 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
             <Bot className="w-4 h-4 text-blue-600" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">AI Assistant</h3>
-            <p className="text-xs text-gray-500">Ask about your analysis</p>
+            <h3 className="font-semibold text-gray-900">Strategy Assistant</h3>
+            <p className="text-xs text-gray-500">Competitive intelligence expert</p>
           </div>
         </div>
         <button
@@ -160,7 +203,7 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-100 text-gray-900'
               }`}>
-                <p className="text-xs leading-relaxed">{message.content}</p>
+                <div className="text-xs leading-relaxed whitespace-pre-wrap">{message.content}</div>
                 <p className={`text-xs mt-1 opacity-70`}>
                   {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
@@ -217,7 +260,7 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Ask about competitors..."
+            placeholder="Ask about competitors, SWOT, pricing..."
             rows={1}
             className="flex-1 px-2 py-1 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-600 focus:border-transparent resize-none text-xs"
             style={{ minHeight: '32px', maxHeight: '80px' }}
