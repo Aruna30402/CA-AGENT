@@ -101,6 +101,8 @@ export default function CompetitorProfiles({ competitors }: CompetitorProfilesPr
               </div>
               
               {competitor.isCustom && (
+                <div></div>
+              )}
             </div>
           </div>
         ))}
