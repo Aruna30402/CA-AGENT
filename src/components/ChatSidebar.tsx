@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, MessageCircle, Bot, User, Lightbulb, BarChart3, Users, TrendingUp, X, Shield, Target, AlertTriangle, Zap } from 'lucide-react';
+import { Send, MessageCircle, Bot, User, Lightbulb, BarChart3, Users, TrendingUp, X, Shield, Target, AlertTriangle, Zap, ChevronRight } from 'lucide-react';
 import { ProductInput, Competitor, ChatMessage } from '../types';
 
 interface ChatSidebarProps {
@@ -9,13 +9,23 @@ interface ChatSidebarProps {
   competitors: Competitor[];
 }
 
+interface ChatMessageWithSuggestions extends ChatMessage {
+  suggestions?: string[];
+}
+
 export default function ChatSidebar({ isOpen, onClose, productInput, competitors }: ChatSidebarProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>([
+  const [messages, setMessages] = useState<ChatMessageWithSuggestions[]>([
     {
       id: '1',
       type: 'assistant',
       content: `Hello! I'm your AI assistant for competitor analysis. I can help you understand insights about ${productInput.productName || 'your product'} and your ${competitors.length} tracked competitors. Ask me anything about their strengths, weaknesses, opportunities, threats, pricing, features, or market positioning!`,
-      timestamp: new Date()
+      timestamp: new Date(),
+      suggestions: [
+        "What are my competitors' main weaknesses?",
+        "What pricing strategy should I consider?",
+        "Which market opportunities should I pursue first?",
+        "How can I differentiate from existing competitors?"
+      ]
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
@@ -30,13 +40,14 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
     scrollToBottom();
   }, [messages]);
 
-  const generateResponse = (userMessage: string): string => {
+  const generateResponse = (userMessage: string): { content: string; suggestions: string[] } => {
     const message = userMessage.toLowerCase();
     const competitorNames = competitors.map(c => c.name).join(', ');
     
     // SWOT Analysis questions
     if (message.includes('strength') || message.includes('strong')) {
-      return `## 🛡️ **COMPETITOR STRENGTHS ANALYSIS**
+      return {
+        content: `## 🛡️ **COMPETITOR STRENGTHS ANALYSIS**
 
 **KEY FINDINGS:**
 
@@ -61,16 +72,19 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
 • Active community forums and user groups
 
 **STRATEGIC IMPACT:** These strengths create high switching costs and customer loyalty, making market entry challenging but not impossible.
-
----
-**💡 Follow-up questions you might ask:**
-• "How can I compete against these strong brand positions?"
-• "What weaknesses do these competitors have that I can exploit?"
-• "Which competitor strength is most vulnerable to disruption?"`;
+`,
+        suggestions: [
+          "How can I compete against these strong brand positions?",
+          "What weaknesses do these competitors have that I can exploit?",
+          "Which competitor strength is most vulnerable to disruption?",
+          "What's the cost to build similar integration ecosystems?"
+        ]
+      };
     }
     
     if (message.includes('weakness') || message.includes('weak')) {
-      return `## ⚠️ **COMPETITOR WEAKNESSES ANALYSIS**
+      return {
+        content: `## ⚠️ **COMPETITOR WEAKNESSES ANALYSIS**
 
 **CRITICAL VULNERABILITIES IDENTIFIED:**
 
@@ -99,16 +113,19 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
 • **Opportunity:** One-click integrations
 
 **STRATEGIC ADVANTAGE:** These weaknesses represent clear differentiation opportunities where you can outperform established players.
-
----
-**💡 Follow-up questions you might ask:**
-• "Which weakness should I prioritize attacking first?"
-• "How can I turn these weaknesses into my competitive advantages?"
-• "What specific features could exploit these gaps?"`;
+`,
+        suggestions: [
+          "Which weakness should I prioritize attacking first?",
+          "How can I turn these weaknesses into my competitive advantages?",
+          "What specific features could exploit these gaps?",
+          "How much would it cost to build better mobile experience?"
+        ]
+      };
     }
     
     if (message.includes('opportunit') || message.includes('growth')) {
-      return `## 🚀 **MARKET OPPORTUNITIES ANALYSIS**
+      return {
+        content: `## 🚀 **MARKET OPPORTUNITIES ANALYSIS**
 
 **HIGH-IMPACT GROWTH OPPORTUNITIES:**
 
@@ -137,16 +154,19 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
 • **Combined market:** $8B+ vertical opportunities
 
 **STRATEGIC RECOMMENDATION:** Focus on 1-2 opportunities initially for maximum impact and resource efficiency.
-
----
-**💡 Follow-up questions you might ask:**
-• "Which opportunity has the fastest path to revenue?"
-• "What's the competitive landscape in emerging markets?"
-• "How do I validate demand for industry-specific features?"`;
+`,
+        suggestions: [
+          "Which opportunity has the fastest path to revenue?",
+          "What's the competitive landscape in emerging markets?",
+          "How do I validate demand for industry-specific features?",
+          "What's the minimum investment needed for AI integration?"
+        ]
+      };
     }
     
     if (message.includes('threat') || message.includes('risk')) {
-      return `## 🚨 **MARKET THREATS ANALYSIS**
+      return {
+        content: `## 🚨 **MARKET THREATS ANALYSIS**
 
 **CRITICAL THREATS TO MONITOR:**
 
@@ -181,17 +201,20 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
 • **Risk level:** HIGH - Harder to stand out
 
 **MITIGATION STRATEGY:** Focus on unique value propositions and underserved niches to avoid direct competition with giants.
-
----
-**💡 Follow-up questions you might ask:**
-• "How can I compete against Microsoft's bundling strategy?"
-• "What's the best way to differentiate in a saturated market?"
-• "How do I prepare for economic downturns affecting my market?"`;
+`,
+        suggestions: [
+          "How can I compete against Microsoft's bundling strategy?",
+          "What's the best way to differentiate in a saturated market?",
+          "How do I prepare for economic downturns affecting my market?",
+          "What's my risk level compared to these threats?"
+        ]
+      };
     }
     
     // Competitor-specific questions
     if (message.includes('competitor') || message.includes('compare')) {
-      return `## 🏆 **COMPETITIVE LANDSCAPE OVERVIEW**
+      return {
+        content: `## 🏆 **COMPETITIVE LANDSCAPE OVERVIEW**
 
 **YOUR TRACKED COMPETITORS:** ${competitors.length} companies
 
@@ -230,18 +253,21 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
 • Strong brand recognition
 
 **KEY INSIGHT:** Each competitor owns a specific niche - your opportunity lies in finding an underserved segment or creating a better hybrid solution.
-
----
-**💡 Follow-up questions you might ask:**
-• "Which competitor should I be most worried about?"
-• "What's the biggest gap in the current market?"
-• "How do these competitors acquire new customers?"`;
+`,
+        suggestions: [
+          "Which competitor should I be most worried about?",
+          "What's the biggest gap in the current market?",
+          "How do these competitors acquire new customers?",
+          "What's each competitor's main weakness I can exploit?"
+        ]
+      };
     }
     
     // Pricing questions
     if (message.includes('price') || message.includes('pricing') || message.includes('cost')) {
       const pricingInfo = competitors.map(c => `${c.name}: ${c.pricing.startingPrice} ${c.pricing.currency} (${c.pricing.model})`).join(', ');
-      return `## 💰 **COMPETITIVE PRICING ANALYSIS**
+      return {
+        content: `## 💰 **COMPETITIVE PRICING ANALYSIS**
 
 **CURRENT PRICING LANDSCAPE:**
 
@@ -278,17 +304,20 @@ ${competitors.map(c => `• **${c.name}:** ${c.pricing.startingPrice} ${c.pricin
 • $6.99 feels significantly cheaper than $7.25
 • Annual discounts (20%+) encourage longer commitments
 • Clear feature differentiation between tiers
-
----
-**💡 Follow-up questions you might ask:**
-• "What pricing model works best for my target market?"
-• "How do I justify premium pricing against free alternatives?"
-• "Should I offer a freemium model or paid-only?"`;
+`,
+        suggestions: [
+          "What pricing model works best for my target market?",
+          "How do I justify premium pricing against free alternatives?",
+          "Should I offer a freemium model or paid-only?",
+          "What's the optimal price point for my market segment?"
+        ]
+      };
     }
     
     // Feature questions
     if (message.includes('feature') || message.includes('functionality')) {
-      return `## ⚡ **FEATURE LANDSCAPE ANALYSIS**
+      return {
+        content: `## ⚡ **FEATURE LANDSCAPE ANALYSIS**
 
 **UNIVERSAL CORE FEATURES** (Table Stakes):
 ✅ Real-time messaging and chat
@@ -340,18 +369,21 @@ ${competitors.map(c => `• **${c.name}:** ${c.pricing.startingPrice} ${c.pricin
 🧠 **Intuitive AI Integration**
 • Current gap: AI feels like add-on feature
 • Opportunity: AI-native design from ground up
-
----
-**💡 Follow-up questions you might ask:**
-• "Which feature gap has the biggest market opportunity?"
-• "How do I prioritize feature development against competitors?"
-• "What features do users want that competitors don't offer?"`;
+`,
+        suggestions: [
+          "Which feature gap has the biggest market opportunity?",
+          "How do I prioritize feature development against competitors?",
+          "What features do users want that competitors don't offer?",
+          "What's the minimum viable feature set to compete?"
+        ]
+      };
     }
     
     // Market questions
     if (message.includes('market') || message.includes('segment')) {
       const segment = productInput.marketSegment === 'b2b' ? 'B2B' : productInput.marketSegment === 'b2c' ? 'B2C' : 'your target';
-      return `## 📊 **${segment.toUpperCase()} MARKET ANALYSIS**
+      return {
+        content: `## 📊 **${segment.toUpperCase()} MARKET ANALYSIS**
 
 **MARKET FUNDAMENTALS:**
 • **Total Market Size:** $47.2B globally (2024)
@@ -407,17 +439,20 @@ ${segment === 'B2B' ? `
 
 **YOUR STRATEGIC POSITIONING:**
 ${segment} market offers significant opportunities in underserved niches, particularly industry-specific solutions and simplified user experiences.
-
----
-**💡 Follow-up questions you might ask:**
-• "What's the best market entry strategy for ${segment}?"
-• "Which market segment has the least competition?"
-• "How do I validate market demand before building?"`;
+`,
+        suggestions: [
+          `What's the best market entry strategy for ${segment}?`,
+          "Which market segment has the least competition?",
+          "How do I validate market demand before building?",
+          "What's the customer acquisition cost in this market?"
+        ]
+      };
     }
     
     // Strategy questions
     if (message.includes('strategy') || message.includes('recommend') || message.includes('suggest')) {
-      return `## 🎯 **STRATEGIC RECOMMENDATIONS**
+      return {
+        content: `## 🎯 **STRATEGIC RECOMMENDATIONS**
 
 **TOP 5 STRATEGIC PRIORITIES** (Ranked by Impact × Feasibility):
 
@@ -462,17 +497,20 @@ ${segment} market offers significant opportunities in underserved niches, partic
 3. Perfect onboarding flow (retention boost)
 4. Choose industry specialization (market focus)
 5. Integrate AI capabilities (future-proofing)
-
----
-**💡 Follow-up questions you might ask:**
-• "How do I validate which strategy will work best?"
-• "What's the minimum viable product for mobile-first approach?"
-• "Which industry should I specialize in first?"`;
+`,
+        suggestions: [
+          "How do I validate which strategy will work best?",
+          "What's the minimum viable product for mobile-first approach?",
+          "Which industry should I specialize in first?",
+          "What's the timeline and budget for each strategy?"
+        ]
+      };
     }
     
     // Performance questions
     if (message.includes('performance') || message.includes('speed') || message.includes('reliability')) {
-      return `## ⚡ **PERFORMANCE BENCHMARKS ANALYSIS**
+      return {
+        content: `## ⚡ **PERFORMANCE BENCHMARKS ANALYSIS**
 
 **UPTIME & RELIABILITY STANDARDS:**
 • **Industry Standard:** 99.9% uptime (8.76 hours downtime/year)
@@ -523,17 +561,20 @@ ${segment} market offers significant opportunities in underserved niches, partic
 • Use modern web technologies (WebRTC, WebAssembly)
 • Implement edge computing for global performance
 • Design for horizontal scaling from day one
-
----
-**💡 Follow-up questions you might ask:**
-• "What's the most important performance metric to optimize first?"
-• "How do I ensure my platform scales better than competitors?"
-• "What causes performance issues in large organizations?"`;
+`,
+        suggestions: [
+          "What's the most important performance metric to optimize first?",
+          "How do I ensure my platform scales better than competitors?",
+          "What causes performance issues in large organizations?",
+          "What's the technical architecture needed for 99.99% uptime?"
+        ]
+      };
     }
     
     // Security questions
     if (message.includes('security') || message.includes('privacy') || message.includes('compliance')) {
-      return `## 🔒 **SECURITY & COMPLIANCE LANDSCAPE**
+      return {
+        content: `## 🔒 **SECURITY & COMPLIANCE LANDSCAPE**
 
 **ENTERPRISE SECURITY REQUIREMENTS:**
 
@@ -589,17 +630,20 @@ ${segment} market offers significant opportunities in underserved niches, partic
 • Assume no implicit trust
 • Verify every user and device
 • Continuous security monitoring
-
----
-**💡 Follow-up questions you might ask:**
-• "What security features are most important for my target market?"
-• "How do I achieve enterprise security without complexity?"
-• "What compliance certifications should I prioritize first?"`;
+`,
+        suggestions: [
+          "What security features are most important for my target market?",
+          "How do I achieve enterprise security without complexity?",
+          "What compliance certifications should I prioritize first?",
+          "What's the cost of achieving SOC 2 compliance?"
+        ]
+      };
     }
     
     // User experience questions
     if (message.includes('user') || message.includes('experience') || message.includes('usability')) {
-      return `## 🎨 **USER EXPERIENCE ANALYSIS**
+      return {
+        content: `## 🎨 **USER EXPERIENCE ANALYSIS**
 
 **UX LEADERSHIP RANKINGS:**
 
@@ -670,17 +714,20 @@ ${segment} market offers significant opportunities in underserved niches, partic
 • AI-powered notification prioritization
 • Context-aware delivery timing
 • User-controlled notification intelligence
-
----
-**💡 Follow-up questions you might ask:**
-• "What specific UX improvements would have the biggest impact?"
-• "How do I design for both power users and beginners?"
-• "What UX metrics should I track against competitors?"`;
+`,
+        suggestions: [
+          "What specific UX improvements would have the biggest impact?",
+          "How do I design for both power users and beginners?",
+          "What UX metrics should I track against competitors?",
+          "How do I test my UX against competitor interfaces?"
+        ]
+      };
     }
     
     // Integration questions
     if (message.includes('integration') || message.includes('api') || message.includes('connect')) {
-      return `## 🔗 **INTEGRATION ECOSYSTEM ANALYSIS**
+      return {
+        content: `## 🔗 **INTEGRATION ECOSYSTEM ANALYSIS**
 
 **INTEGRATION MARKETPLACE LEADERS:**
 
@@ -742,16 +789,19 @@ ${segment} market offers significant opportunities in underserved niches, partic
 • Direct partnerships with top 20 tools
 • Co-marketing opportunities
 • Shared customer success initiatives
-
----
-**💡 Follow-up questions you might ask:**
-• "Which integrations should I build first for maximum impact?"
-• "How do I create better integrations than Slack?"
-• "What's the best way to attract third-party developers?"`;
+`,
+        suggestions: [
+          "Which integrations should I build first for maximum impact?",
+          "How do I create better integrations than Slack?",
+          "What's the best way to attract third-party developers?",
+          "How do I build a developer ecosystem around my product?"
+        ]
+      };
     }
     
     // Default comprehensive response
-    return `## 🎯 **COMPETITIVE INTELLIGENCE ASSISTANT**
+    return {
+      content: `## 🎯 **COMPETITIVE INTELLIGENCE ASSISTANT**
 
 Welcome! I'm your strategic analysis expert, ready to provide detailed insights about your competitive landscape.
 
@@ -802,20 +852,20 @@ Welcome! I'm your strategic analysis expert, ready to provide detailed insights 
 • "What are [competitor name]'s main weaknesses?"
 • "What pricing strategy should I consider?"
 • "Which market opportunities should I pursue first?"
-• "How can I differentiate from existing competitors?"
-
----
-**💡 Popular questions to get started:**
-• "What are the biggest opportunities in this market?"
-• "Which competitor should I be most concerned about?"
-• "What features do users want that competitors don't offer?"
-• "How should I price my product competitively?"`;
+• "How can I differentiate from existing competitors?"`,
+      suggestions: [
+        "What are the biggest opportunities in this market?",
+        "Which competitor should I be most concerned about?",
+        "What features do users want that competitors don't offer?",
+        "How should I price my product competitively?"
+      ]
+    };
   };
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
-    const userMessage: ChatMessage = {
+    const userMessage: ChatMessageWithSuggestions = {
       id: Date.now().toString(),
       type: 'user',
       content: inputMessage,
@@ -828,11 +878,13 @@ Welcome! I'm your strategic analysis expert, ready to provide detailed insights 
 
     // Simulate AI response delay
     setTimeout(() => {
-      const assistantMessage: ChatMessage = {
+      const response = generateResponse(inputMessage);
+      const assistantMessage: ChatMessageWithSuggestions = {
         id: (Date.now() + 1).toString(),
         type: 'assistant',
-        content: generateResponse(inputMessage),
-        timestamp: new Date()
+        content: response.content,
+        timestamp: new Date(),
+        suggestions: response.suggestions
       };
 
       setMessages(prev => [...prev, assistantMessage]);
@@ -845,6 +897,12 @@ Welcome! I'm your strategic analysis expert, ready to provide detailed insights 
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setInputMessage(suggestion);
+    // Auto-send the suggestion
+    setTimeout(() => handleSendMessage(), 100);
   };
 
   const quickQuestions = [
@@ -931,6 +989,22 @@ Welcome! I'm your strategic analysis expert, ready to provide detailed insights 
                 </p>
               </div>
             </div>
+            
+            {/* Follow-up Suggestions */}
+            {message.type === 'assistant' && message.suggestions && (
+              <div className="mt-3 space-y-1">
+                {message.suggestions.map((suggestion, suggestionIndex) => (
+                  <button
+                    key={suggestionIndex}
+                    onClick={() => handleSuggestionClick(suggestion)}
+                    className="flex items-center space-x-2 w-full p-2 text-left text-xs text-blue-600 hover:bg-blue-50 rounded-md transition-colors border border-blue-200 hover:border-blue-300"
+                  >
+                    <ChevronRight className="w-3 h-3 flex-shrink-0" />
+                    <span className="truncate">{suggestion}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         ))}
 
@@ -963,7 +1037,7 @@ Welcome! I'm your strategic analysis expert, ready to provide detailed insights 
               return (
                 <button
                   key={index}
-                  onClick={() => setInputMessage(question.query)}
+                  onClick={() => handleSuggestionClick(question.query)}
                   className="flex items-center space-x-2 w-full p-2 text-left text-xs text-gray-600 hover:bg-white hover:text-gray-900 rounded-md transition-colors"
                 >
                   <Icon className="w-3 h-3" />
