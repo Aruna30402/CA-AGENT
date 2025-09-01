@@ -18,14 +18,10 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
     {
       id: '1',
       type: 'assistant',
-      content: `Hello! I'm your AI assistant for competitor analysis. I can help you understand insights about ${productInput.productName || 'your product'} and your ${competitors.length} tracked competitors. Ask me anything about their strengths, weaknesses, opportunities, threats, pricing, features, or market positioning!`,
-      timestamp: new Date(),
-      suggestions: [
-        "What are my competitors' main weaknesses?",
-        "What pricing strategy should I consider?",
-        "Which market opportunities should I pursue first?",
-        "How can I differentiate from existing competitors?"
-      ]
+      content: `Hello! I'm your AI assistant for competitor analysis. I can help you understand insights about ${productInput.productName || 'your product'} and your ${competitors.length} tracked competitors. 
+
+Ask me anything about their strengths, weaknesses, opportunities, threats, pricing, features, or market positioning!`,
+      timestamp: new Date()
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
@@ -42,12 +38,11 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
 
   const generateResponse = (userMessage: string): { content: string; suggestions: string[] } => {
     const message = userMessage.toLowerCase();
-    const competitorNames = competitors.map(c => c.name).join(', ');
     
     // SWOT Analysis questions
     if (message.includes('strength') || message.includes('strong')) {
       return {
-        content: `## 🛡️ **COMPETITOR STRENGTHS ANALYSIS**
+        content: `## 🛡️ COMPETITOR STRENGTHS ANALYSIS
 
 **KEY FINDINGS:**
 
@@ -71,8 +66,7 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
 • Comprehensive documentation and training
 • Active community forums and user groups
 
-**STRATEGIC IMPACT:** These strengths create high switching costs and customer loyalty, making market entry challenging but not impossible.
-`,
+**STRATEGIC IMPACT:** These strengths create high switching costs and customer loyalty, making market entry challenging but not impossible.`,
         suggestions: [
           "How can I compete against these strong brand positions?",
           "What weaknesses do these competitors have that I can exploit?",
@@ -84,7 +78,7 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
     
     if (message.includes('weakness') || message.includes('weak')) {
       return {
-        content: `## ⚠️ **COMPETITOR WEAKNESSES ANALYSIS**
+        content: `## ⚠️ COMPETITOR WEAKNESSES ANALYSIS
 
 **CRITICAL VULNERABILITIES IDENTIFIED:**
 
@@ -112,8 +106,7 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
 • Poor user experience for non-technical users
 • **Opportunity:** One-click integrations
 
-**STRATEGIC ADVANTAGE:** These weaknesses represent clear differentiation opportunities where you can outperform established players.
-`,
+**STRATEGIC ADVANTAGE:** These weaknesses represent clear differentiation opportunities where you can outperform established players.`,
         suggestions: [
           "Which weakness should I prioritize attacking first?",
           "How can I turn these weaknesses into my competitive advantages?",
@@ -125,7 +118,7 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
     
     if (message.includes('opportunit') || message.includes('growth')) {
       return {
-        content: `## 🚀 **MARKET OPPORTUNITIES ANALYSIS**
+        content: `## 🚀 MARKET OPPORTUNITIES ANALYSIS
 
 **HIGH-IMPACT GROWTH OPPORTUNITIES:**
 
@@ -153,8 +146,7 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
 • Finance: SOX compliance + secure document sharing
 • **Combined market:** $8B+ vertical opportunities
 
-**STRATEGIC RECOMMENDATION:** Focus on 1-2 opportunities initially for maximum impact and resource efficiency.
-`,
+**STRATEGIC RECOMMENDATION:** Focus on 1-2 opportunities initially for maximum impact and resource efficiency.`,
         suggestions: [
           "Which opportunity has the fastest path to revenue?",
           "What's the competitive landscape in emerging markets?",
@@ -166,7 +158,7 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
     
     if (message.includes('threat') || message.includes('risk')) {
       return {
-        content: `## 🚨 **MARKET THREATS ANALYSIS**
+        content: `## 🚨 MARKET THREATS ANALYSIS
 
 **CRITICAL THREATS TO MONITOR:**
 
@@ -200,8 +192,7 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
 • Differentiation becoming increasingly difficult
 • **Risk level:** HIGH - Harder to stand out
 
-**MITIGATION STRATEGY:** Focus on unique value propositions and underserved niches to avoid direct competition with giants.
-`,
+**MITIGATION STRATEGY:** Focus on unique value propositions and underserved niches to avoid direct competition with giants.`,
         suggestions: [
           "How can I compete against Microsoft's bundling strategy?",
           "What's the best way to differentiate in a saturated market?",
@@ -214,7 +205,7 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
     // Competitor-specific questions
     if (message.includes('competitor') || message.includes('compare')) {
       return {
-        content: `## 🏆 **COMPETITIVE LANDSCAPE OVERVIEW**
+        content: `## 🏆 COMPETITIVE LANDSCAPE OVERVIEW
 
 **YOUR TRACKED COMPETITORS:** ${competitors.length} companies
 
@@ -252,8 +243,7 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
 • Simple, intuitive interface
 • Strong brand recognition
 
-**KEY INSIGHT:** Each competitor owns a specific niche - your opportunity lies in finding an underserved segment or creating a better hybrid solution.
-`,
+**KEY INSIGHT:** Each competitor owns a specific niche - your opportunity lies in finding an underserved segment or creating a better hybrid solution.`,
         suggestions: [
           "Which competitor should I be most worried about?",
           "What's the biggest gap in the current market?",
@@ -265,9 +255,8 @@ export default function ChatSidebar({ isOpen, onClose, productInput, competitors
     
     // Pricing questions
     if (message.includes('price') || message.includes('pricing') || message.includes('cost')) {
-      const pricingInfo = competitors.map(c => `${c.name}: ${c.pricing.startingPrice} ${c.pricing.currency} (${c.pricing.model})`).join(', ');
       return {
-        content: `## 💰 **COMPETITIVE PRICING ANALYSIS**
+        content: `## 💰 COMPETITIVE PRICING ANALYSIS
 
 **CURRENT PRICING LANDSCAPE:**
 
@@ -303,8 +292,7 @@ ${competitors.map(c => `• **${c.name}:** ${c.pricing.startingPrice} ${c.pricin
 📊 **Pricing Psychology:**
 • $6.99 feels significantly cheaper than $7.25
 • Annual discounts (20%+) encourage longer commitments
-• Clear feature differentiation between tiers
-`,
+• Clear feature differentiation between tiers`,
         suggestions: [
           "What pricing model works best for my target market?",
           "How do I justify premium pricing against free alternatives?",
@@ -317,7 +305,7 @@ ${competitors.map(c => `• **${c.name}:** ${c.pricing.startingPrice} ${c.pricin
     // Feature questions
     if (message.includes('feature') || message.includes('functionality')) {
       return {
-        content: `## ⚡ **FEATURE LANDSCAPE ANALYSIS**
+        content: `## ⚡ FEATURE LANDSCAPE ANALYSIS
 
 **UNIVERSAL CORE FEATURES** (Table Stakes):
 ✅ Real-time messaging and chat
@@ -368,8 +356,7 @@ ${competitors.map(c => `• **${c.name}:** ${c.pricing.startingPrice} ${c.pricin
 
 🧠 **Intuitive AI Integration**
 • Current gap: AI feels like add-on feature
-• Opportunity: AI-native design from ground up
-`,
+• Opportunity: AI-native design from ground up`,
         suggestions: [
           "Which feature gap has the biggest market opportunity?",
           "How do I prioritize feature development against competitors?",
@@ -383,7 +370,7 @@ ${competitors.map(c => `• **${c.name}:** ${c.pricing.startingPrice} ${c.pricin
     if (message.includes('market') || message.includes('segment')) {
       const segment = productInput.marketSegment === 'b2b' ? 'B2B' : productInput.marketSegment === 'b2c' ? 'B2C' : 'your target';
       return {
-        content: `## 📊 **${segment.toUpperCase()} MARKET ANALYSIS**
+        content: `## 📊 ${segment.toUpperCase()} MARKET ANALYSIS
 
 **MARKET FUNDAMENTALS:**
 • **Total Market Size:** $47.2B globally (2024)
@@ -438,8 +425,7 @@ ${segment === 'B2B' ? `
 • 📱 Mobile-first usage patterns emerging
 
 **YOUR STRATEGIC POSITIONING:**
-${segment} market offers significant opportunities in underserved niches, particularly industry-specific solutions and simplified user experiences.
-`,
+${segment} market offers significant opportunities in underserved niches, particularly industry-specific solutions and simplified user experiences.`,
         suggestions: [
           `What's the best market entry strategy for ${segment}?`,
           "Which market segment has the least competition?",
@@ -452,7 +438,7 @@ ${segment} market offers significant opportunities in underserved niches, partic
     // Strategy questions
     if (message.includes('strategy') || message.includes('recommend') || message.includes('suggest')) {
       return {
-        content: `## 🎯 **STRATEGIC RECOMMENDATIONS**
+        content: `## 🎯 STRATEGIC RECOMMENDATIONS
 
 **TOP 5 STRATEGIC PRIORITIES** (Ranked by Impact × Feasibility):
 
@@ -496,8 +482,7 @@ ${segment} market offers significant opportunities in underserved niches, partic
 2. Build mobile-first experience (competitive advantage)
 3. Perfect onboarding flow (retention boost)
 4. Choose industry specialization (market focus)
-5. Integrate AI capabilities (future-proofing)
-`,
+5. Integrate AI capabilities (future-proofing)`,
         suggestions: [
           "How do I validate which strategy will work best?",
           "What's the minimum viable product for mobile-first approach?",
@@ -510,7 +495,7 @@ ${segment} market offers significant opportunities in underserved niches, partic
     // Performance questions
     if (message.includes('performance') || message.includes('speed') || message.includes('reliability')) {
       return {
-        content: `## ⚡ **PERFORMANCE BENCHMARKS ANALYSIS**
+        content: `## ⚡ PERFORMANCE BENCHMARKS ANALYSIS
 
 **UPTIME & RELIABILITY STANDARDS:**
 • **Industry Standard:** 99.9% uptime (8.76 hours downtime/year)
@@ -560,8 +545,7 @@ ${segment} market offers significant opportunities in underserved niches, partic
 **TECHNICAL RECOMMENDATIONS:**
 • Use modern web technologies (WebRTC, WebAssembly)
 • Implement edge computing for global performance
-• Design for horizontal scaling from day one
-`,
+• Design for horizontal scaling from day one`,
         suggestions: [
           "What's the most important performance metric to optimize first?",
           "How do I ensure my platform scales better than competitors?",
@@ -574,7 +558,7 @@ ${segment} market offers significant opportunities in underserved niches, partic
     // Security questions
     if (message.includes('security') || message.includes('privacy') || message.includes('compliance')) {
       return {
-        content: `## 🔒 **SECURITY & COMPLIANCE LANDSCAPE**
+        content: `## 🔒 SECURITY & COMPLIANCE LANDSCAPE
 
 **ENTERPRISE SECURITY REQUIREMENTS:**
 
@@ -629,8 +613,7 @@ ${segment} market offers significant opportunities in underserved niches, partic
 🔐 **Zero-Trust Architecture**
 • Assume no implicit trust
 • Verify every user and device
-• Continuous security monitoring
-`,
+• Continuous security monitoring`,
         suggestions: [
           "What security features are most important for my target market?",
           "How do I achieve enterprise security without complexity?",
@@ -643,7 +626,7 @@ ${segment} market offers significant opportunities in underserved niches, partic
     // User experience questions
     if (message.includes('user') || message.includes('experience') || message.includes('usability')) {
       return {
-        content: `## 🎨 **USER EXPERIENCE ANALYSIS**
+        content: `## 🎨 USER EXPERIENCE ANALYSIS
 
 **UX LEADERSHIP RANKINGS:**
 
@@ -713,8 +696,7 @@ ${segment} market offers significant opportunities in underserved niches, partic
 **4. Intelligent Notifications**
 • AI-powered notification prioritization
 • Context-aware delivery timing
-• User-controlled notification intelligence
-`,
+• User-controlled notification intelligence`,
         suggestions: [
           "What specific UX improvements would have the biggest impact?",
           "How do I design for both power users and beginners?",
@@ -727,7 +709,7 @@ ${segment} market offers significant opportunities in underserved niches, partic
     // Integration questions
     if (message.includes('integration') || message.includes('api') || message.includes('connect')) {
       return {
-        content: `## 🔗 **INTEGRATION ECOSYSTEM ANALYSIS**
+        content: `## 🔗 INTEGRATION ECOSYSTEM ANALYSIS
 
 **INTEGRATION MARKETPLACE LEADERS:**
 
@@ -788,8 +770,7 @@ ${segment} market offers significant opportunities in underserved niches, partic
 **Partnership Strategy**
 • Direct partnerships with top 20 tools
 • Co-marketing opportunities
-• Shared customer success initiatives
-`,
+• Shared customer success initiatives`,
         suggestions: [
           "Which integrations should I build first for maximum impact?",
           "How do I create better integrations than Slack?",
@@ -801,58 +782,24 @@ ${segment} market offers significant opportunities in underserved niches, partic
     
     // Default comprehensive response
     return {
-      content: `## 🎯 **COMPETITIVE INTELLIGENCE ASSISTANT**
+      content: `## 🎯 COMPETITIVE INTELLIGENCE ASSISTANT
 
-Welcome! I'm your strategic analysis expert, ready to provide detailed insights about your competitive landscape.
+I'm your strategic analysis expert, ready to provide detailed insights about your competitive landscape.
 
 **📊 AVAILABLE ANALYSIS AREAS:**
     
-🛡️ **SWOT Analysis**
-• Comprehensive strengths, weaknesses, opportunities, and threats
-• Evidence-based insights for each competitor
-• Strategic implications and recommendations
-
-💰 **Pricing Intelligence**
-• Competitive pricing breakdown and analysis
-• Market positioning strategies
-• Pricing optimization recommendations
-
-⚡ **Feature Gap Analysis**
-• Detailed feature comparison matrix
-• Unmet market needs identification
-• Product development priorities
-
-📊 **Market Positioning**
-• Competitor positioning strategies
-• Market segment analysis
-• Differentiation opportunities
-
-🎯 **Strategic Recommendations**
-• Actionable business strategy insights
-• Go-to-market recommendations
-• Competitive advantage development
-
-🚀 **Performance Benchmarks**
-• Technical performance comparisons
-• User experience analysis
-• Optimization opportunities
-
-🔒 **Security & Compliance**
-• Security feature comparisons
-• Compliance requirement analysis
-• Risk assessment and mitigation
+🛡️ **SWOT Analysis** - Comprehensive strengths, weaknesses, opportunities, and threats
+💰 **Pricing Intelligence** - Competitive pricing breakdown and analysis
+⚡ **Feature Gap Analysis** - Detailed feature comparison matrix
+📊 **Market Positioning** - Competitor positioning strategies
+🎯 **Strategic Recommendations** - Actionable business strategy insights
+🚀 **Performance Benchmarks** - Technical performance comparisons
+🔒 **Security & Compliance** - Security feature comparisons
 
 **CURRENT ANALYSIS SCOPE:**
 • **Your Product:** ${productInput?.productName || 'Your Product'}
 • **Market Segment:** ${productInput?.marketSegment?.replace('_', ' ').toUpperCase() || 'Not specified'}
-• **Tracked Competitors:** ${competitors.length} companies
-• **Analysis Depth:** Comprehensive strategic intelligence
-    
-**🎯 SUGGESTED STARTING POINTS:**
-• "What are [competitor name]'s main weaknesses?"
-• "What pricing strategy should I consider?"
-• "Which market opportunities should I pursue first?"
-• "How can I differentiate from existing competitors?"`,
+• **Tracked Competitors:** ${competitors.length} companies`,
       suggestions: [
         "What are the biggest opportunities in this market?",
         "Which competitor should I be most concerned about?",
@@ -917,131 +864,138 @@ Welcome! I'm your strategic analysis expert, ready to provide detailed insights 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed right-0 top-0 h-full w-96 bg-white border-l border-gray-200 shadow-lg z-50 flex flex-col">
+    <div className="fixed right-0 top-0 h-full w-96 bg-white border-l border-gray-200 shadow-xl z-50 flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-            <Bot className="w-4 h-4 text-blue-600" />
+          <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-sm">
+            <Bot className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">Strategy Assistant</h3>
-            <p className="text-xs text-gray-500">Competitive intelligence expert</p>
+            <h3 className="font-bold text-gray-900">AI Strategy Assistant</h3>
+            <p className="text-xs text-gray-600">Competitive intelligence expert</p>
           </div>
         </div>
         <button
           onClick={onClose}
-          className="p-1 rounded-lg hover:bg-gray-100 transition-colors"
+          className="p-2 rounded-lg hover:bg-white/50 transition-colors"
         >
-          <X className="w-4 h-4 text-gray-500" />
+          <X className="w-4 h-4 text-gray-600" />
         </button>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
-            <div className={`flex items-start space-x-2 max-w-[85%] ${
-              message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''
-            }`}>
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
-                message.type === 'user' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-gray-100 text-gray-600'
-              }`}>
-                {message.type === 'user' ? (
-                  <User className="w-3 h-3" />
-                ) : (
-                  <Bot className="w-3 h-3" />
-                )}
-              </div>
-              <div className={`rounded-lg px-3 py-2 ${
-                message.type === 'user'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-900'
-              }`}>
-                <div className="text-xs leading-relaxed whitespace-pre-wrap prose prose-xs max-w-none">
-                  {message.content.split('\n').map((line, index) => {
-                    // Handle markdown-style formatting
-                    if (line.startsWith('## ')) {
-                      return <div key={index} className="font-bold text-sm mt-2 mb-1">{line.replace('## ', '')}</div>;
-                    }
-                    if (line.startsWith('**') && line.endsWith('**')) {
-                      return <div key={index} className="font-semibold mt-1">{line.replace(/\*\*/g, '')}</div>;
-                    }
-                    if (line.startsWith('• ')) {
-                      return <div key={index} className="ml-2">{line}</div>;
-                    }
-                    if (line.startsWith('---')) {
-                      return <hr key={index} className="my-2 border-gray-300" />;
-                    }
-                    if (line.trim() === '') {
-                      return <div key={index} className="h-1"></div>;
-                    }
-                    return <div key={index}>{line}</div>;
-                  })}
+      {/* Messages Container */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-4 space-y-4">
+          {messages.map((message, messageIndex) => (
+            <div key={message.id} className="space-y-3">
+              {/* Message */}
+              <div className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`flex items-start space-x-3 max-w-[90%] ${
+                  message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''
+                }`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                    message.type === 'user' 
+                      ? 'bg-blue-600 text-white shadow-sm' 
+                      : 'bg-gradient-to-r from-blue-100 to-purple-100 text-gray-700'
+                  }`}>
+                    {message.type === 'user' ? (
+                      <User className="w-4 h-4" />
+                    ) : (
+                      <Bot className="w-4 h-4" />
+                    )}
+                  </div>
+                  <div className={`rounded-xl px-4 py-3 shadow-sm ${
+                    message.type === 'user'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-50 text-gray-900 border border-gray-200'
+                  }`}>
+                    <div className="text-sm leading-relaxed whitespace-pre-wrap">
+                      {message.content.split('\n').map((line, index) => {
+                        // Handle markdown-style formatting
+                        if (line.startsWith('## ')) {
+                          return <div key={index} className="font-bold text-base mt-3 mb-2 first:mt-0">{line.replace('## ', '')}</div>;
+                        }
+                        if (line.startsWith('**') && line.endsWith('**')) {
+                          return <div key={index} className="font-semibold mt-2 mb-1">{line.replace(/\*\*/g, '')}</div>;
+                        }
+                        if (line.startsWith('• ')) {
+                          return <div key={index} className="ml-2 mb-1">{line}</div>;
+                        }
+                        if (line.trim() === '') {
+                          return <div key={index} className="h-2"></div>;
+                        }
+                        return <div key={index} className="mb-1">{line}</div>;
+                      })}
+                    </div>
+                    <p className={`text-xs mt-2 opacity-70`}>
+                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
                 </div>
-                <p className={`text-xs mt-1 opacity-70`}>
-                  {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </p>
               </div>
+              
+              {/* Follow-up Suggestions - Only show for assistant messages with suggestions */}
+              {message.type === 'assistant' && message.suggestions && messageIndex > 0 && (
+                <div className="ml-11 space-y-2">
+                  <p className="text-xs font-medium text-gray-500 mb-2">💡 Follow-up questions:</p>
+                  <div className="grid grid-cols-1 gap-2">
+                    {message.suggestions.map((suggestion, suggestionIndex) => (
+                      <button
+                        key={suggestionIndex}
+                        onClick={() => handleSuggestionClick(suggestion)}
+                        className="flex items-center space-x-2 w-full p-3 text-left text-xs text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-200 hover:border-blue-300 group"
+                      >
+                        <ChevronRight className="w-3 h-3 flex-shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                        <span className="font-medium">{suggestion}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-            
-            {/* Follow-up Suggestions */}
-            {message.type === 'assistant' && message.suggestions && (
-              <div className="mt-3 space-y-1">
-                {message.suggestions.map((suggestion, suggestionIndex) => (
-                  <button
-                    key={suggestionIndex}
-                    onClick={() => handleSuggestionClick(suggestion)}
-                    className="flex items-center space-x-2 w-full p-2 text-left text-xs text-blue-600 hover:bg-blue-50 rounded-md transition-colors border border-blue-200 hover:border-blue-300"
-                  >
-                    <ChevronRight className="w-3 h-3 flex-shrink-0" />
-                    <span className="truncate">{suggestion}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
+          ))}
 
-        {isTyping && (
-          <div className="flex justify-start">
-            <div className="flex items-start space-x-2">
-              <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
-                <Bot className="w-3 h-3 text-gray-600" />
-              </div>
-              <div className="bg-gray-100 rounded-lg px-3 py-2">
-                <div className="flex space-x-1">
-                  <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce"></div>
-                  <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+          {/* Typing Indicator */}
+          {isTyping && (
+            <div className="flex justify-start">
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-gray-700" />
+                </div>
+                <div className="bg-gray-100 rounded-xl px-4 py-3 border border-gray-200">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Quick Questions */}
+      {/* Quick Questions - Only show when no messages or just welcome message */}
       {messages.length <= 1 && (
-        <div className="p-3 border-t border-gray-200 bg-gray-50">
-          <p className="text-xs font-medium text-gray-700 mb-2">Quick questions:</p>
-          <div className="space-y-1">
+        <div className="border-t border-gray-200 bg-gradient-to-r from-gray-50 to-blue-50 p-4">
+          <p className="text-sm font-semibold text-gray-700 mb-3 flex items-center space-x-2">
+            <Lightbulb className="w-4 h-4 text-blue-600" />
+            <span>Quick Questions to Get Started:</span>
+          </p>
+          <div className="grid grid-cols-1 gap-2">
             {quickQuestions.map((question, index) => {
               const Icon = question.icon;
               return (
                 <button
                   key={index}
                   onClick={() => handleSuggestionClick(question.query)}
-                  className="flex items-center space-x-2 w-full p-2 text-left text-xs text-gray-600 hover:bg-white hover:text-gray-900 rounded-md transition-colors"
+                  className="flex items-center space-x-3 w-full p-3 text-left text-sm text-gray-700 bg-white hover:bg-blue-50 hover:text-blue-700 rounded-lg transition-colors border border-gray-200 hover:border-blue-300 group"
                 >
-                  <Icon className="w-3 h-3" />
-                  <span>{question.text}</span>
+                  <Icon className="w-4 h-4 text-blue-600 group-hover:scale-110 transition-transform" />
+                  <span className="font-medium">{question.text}</span>
+                  <ChevronRight className="w-3 h-3 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                 </button>
               );
             })}
@@ -1049,26 +1003,31 @@ Welcome! I'm your strategic analysis expert, ready to provide detailed insights 
         </div>
       )}
 
-      {/* Input */}
-      <div className="p-3 border-t border-gray-200">
-        <div className="flex space-x-2">
-          <textarea
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Ask about competitors, SWOT, pricing..."
-            rows={1}
-            className="flex-1 px-2 py-1 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-600 focus:border-transparent resize-none text-xs"
-            style={{ minHeight: '32px', maxHeight: '80px' }}
-          />
-          <button
-            onClick={handleSendMessage}
-            disabled={!inputMessage.trim() || isTyping}
-            className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
-          >
-            <Send className="w-3 h-3" />
-          </button>
+      {/* Input Area */}
+      <div className="border-t border-gray-200 bg-white p-4">
+        <div className="flex space-x-3">
+          <div className="flex-1 relative">
+            <textarea
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Ask about competitors, strategies, market insights..."
+              rows={1}
+              className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-transparent resize-none text-sm placeholder-gray-500"
+              style={{ minHeight: '48px', maxHeight: '120px' }}
+            />
+            <button
+              onClick={handleSendMessage}
+              disabled={!inputMessage.trim() || isTyping}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+            >
+              <Send className="w-4 h-4" />
+            </button>
+          </div>
         </div>
+        <p className="text-xs text-gray-500 mt-2 text-center">
+          Press Enter to send • Shift+Enter for new line
+        </p>
       </div>
     </div>
   );
