@@ -21,6 +21,7 @@ export interface Competitor {
     employees: string;
     headquarters: string;
   };
+  marketShare?: string;
   isCustom?: boolean;
 }
 
@@ -87,4 +88,33 @@ export interface ChatSession {
   id: string;
   messages: ChatMessage[];
   isActive: boolean;
+}
+
+export interface AnalysisResult {
+  id: string;
+  type: 'swot' | 'features' | 'pricing' | 'opportunities' | 'overview';
+  title: string;
+  data: any;
+  timestamp: Date;
+}
+
+export interface MarketOpportunity {
+  title: string;
+  description: string;
+  marketSize: string;
+  timeframe: string;
+  difficulty: 'Low' | 'Medium' | 'High';
+  competitors: string[];
+}
+
+export interface PricingStrategy {
+  competitorId: string;
+  strategy: string;
+  tiers: PricingTier[];
+}
+
+export interface PricingTier {
+  name: string;
+  price: string;
+  features: string[];
 }

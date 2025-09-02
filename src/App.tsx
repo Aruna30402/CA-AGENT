@@ -1,184 +1,170 @@
 import React, { useState } from 'react';
-import { Search, Users, BarChart3, Lightbulb, Bell, FileText, Plus, ExternalLink, TrendingUp, Shield, AlertTriangle, Target, MessageCircle } from 'lucide-react';
-import InputForm from './components/InputForm';
-import CompetitorSelection from './components/CompetitorSelection';
-import CompetitorProfiles from './components/CompetitorProfiles';
-import SwotDashboard from './components/SwotDashboard';
-import FeatureComparison from './components/FeatureComparison';
-import EnhancementSuggestions from './components/EnhancementSuggestions';
-import NotificationSettings from './components/NotificationSettings';
-import ExportShare from './components/ExportShare';
-import ChatSidebar from './components/ChatSidebar';
-import { ProductInput, Competitor, SwotAnalysis } from './types';
+import { Search, MessageCircle, Bot, BarChart3 } from 'lucide-react';
+import ChatInterface from './components/ChatInterface';
+import AnalysisDisplay from './components/AnalysisDisplay';
+import { ProductInput, Competitor, AnalysisResult } from './types';
 
 function App() {
-  const [currentStep, setCurrentStep] = useState<'input' | 'selection' | 'analysis'>('input');
+  const [currentView, setCurrentView] = useState<'welcome' | 'chat' | 'analysis'>('welcome');
   const [productInput, setProductInput] = useState<ProductInput | null>(null);
-  const [selectedCompetitors, setSelectedCompetitors] = useState<Competitor[]>([]);
-  const [activeTab, setActiveTab] = useState<'profiles' | 'swot' | 'comparison' | 'suggestions' | 'notifications' | 'export'>('profiles');
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [competitors, setCompetitors] = useState<Competitor[]>([]);
+  const [analysisResults, setAnalysisResults] = useState<AnalysisResult[]>([]);
+  const [isChatExpanded, setIsChatExpanded] = useState(false);
 
-  const handleProductSubmit = (input: ProductInput) => {
+  const handleStartChat = () => {
+    setCurrentView('chat');
+  };
+
+  const handleAnalysisGenerated = (result: AnalysisResult) => {
+    setAnalysisResults(prev => [...prev, result]);
+    if (currentView === 'chat') {
+      setCurrentView('analysis');
+    }
+  };
+
+  const handleProductUpdate = (input: ProductInput) => {
     setProductInput(input);
-    setCurrentStep('selection');
   };
 
-  const handleCompetitorSelection = (competitors: Competitor[]) => {
-    setSelectedCompetitors(competitors);
-    setCurrentStep('analysis');
+  const handleCompetitorsUpdate = (newCompetitors: Competitor[]) => {
+    setCompetitors(newCompetitors);
   };
 
-  const navigationItems = [
-    { id: 'profiles', label: 'Competitor Profiles', icon: Users },
-    { id: 'swot', label: 'SWOT Analysis', icon: BarChart3 },
-    { id: 'comparison', label: 'Feature Comparison', icon: Target },
-    { id: 'suggestions', label: 'Enhancement Ideas', icon: Lightbulb },
-    { id: 'notifications', label: 'Monitoring', icon: Bell },
-    { id: 'export', label: 'Export & Share', icon: FileText },
-  ];
-
-  if (currentStep === 'input') {
+  // Welcome Screen
+  if (currentView === 'welcome') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
         <div className="container mx-auto px-6 py-12">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 text-white rounded-2xl mb-6">
-                <Search className="w-8 h-8" />
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-3xl mb-8 shadow-lg">
+                <Bot className="w-10 h-10" />
               </div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                Competitor Analysis Platform
+              <h1 className="text-5xl font-bold text-gray-900 mb-6">
+                AI Competitor Analysis
               </h1>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Discover, analyze, and stay ahead of your competition with intelligent insights and automated monitoring
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+                Chat with our AI assistant to discover, analyze, and monitor your competitors. 
+                Get instant insights through natural conversation.
               </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4 mx-auto">
+                    <MessageCircle className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Natural Conversation</h3>
+                  <p className="text-sm text-gray-600">
+                    Simply describe your product and ask questions about competitors
+                  </p>
+                </div>
+                
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                  <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4 mx-auto">
+                    <Search className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Instant Discovery</h3>
+                  <p className="text-sm text-gray-600">
+                    AI automatically finds and analyzes relevant competitors
+                  </p>
+                </div>
+                
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4 mx-auto">
+                    <BarChart3 className="w-6 h-6 text-green-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Live Analysis</h3>
+                  <p className="text-sm text-gray-600">
+                    Real-time SWOT analysis, feature comparison, and insights
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={handleStartChat}
+                className="inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
+              >
+                <MessageCircle className="w-6 h-6" />
+                <span>Start Analysis Chat</span>
+              </button>
             </div>
-            <InputForm onSubmit={handleProductSubmit} />
+
+            {/* Example Queries */}
+            <div className="bg-white rounded-2xl shadow-xl p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                Try These Example Queries
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  "Analyze competitors for my project management tool",
+                  "Compare Slack vs Microsoft Teams vs Discord",
+                  "What are the weaknesses of Zoom and Google Meet?",
+                  "Find opportunities in the CRM market",
+                  "Perform SWOT analysis on Salesforce and HubSpot",
+                  "What pricing strategies do video conferencing tools use?"
+                ].map((query, index) => (
+                  <div
+                    key={index}
+                    className="p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200 hover:border-blue-300 transition-colors cursor-pointer"
+                    onClick={handleStartChat}
+                  >
+                    <p className="text-gray-700 font-medium">"{query}"</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
     );
   }
 
-  if (currentStep === 'selection') {
+  // Chat View (Full Screen)
+  if (currentView === 'chat') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="container mx-auto px-6 py-8">
-          <CompetitorSelection
-            productInput={productInput!}
-            onSelection={handleCompetitorSelection}
-            onBack={() => setCurrentStep('input')}
-          />
-        </div>
+      <div className="min-h-screen bg-gray-50">
+        <ChatInterface
+          onAnalysisGenerated={handleAnalysisGenerated}
+          onProductUpdate={handleProductUpdate}
+          onCompetitorsUpdate={handleCompetitorsUpdate}
+          onViewAnalysis={() => setCurrentView('analysis')}
+          productInput={productInput}
+          competitors={competitors}
+        />
       </div>
     );
   }
 
+  // Analysis View (Split Screen)
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
-        <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-lg">
-                <Search className="w-4 h-4" />
-              </div>
-              <div>
-                <h1 className="text-lg font-semibold text-gray-900">
-                  {productInput?.productName || 'Product'} Analysis
-                </h1>
-                <p className="text-sm text-gray-500">
-                  {selectedCompetitors.length} competitors tracked
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => setCurrentStep('input')}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-            >
-              New Analysis
-            </button>
-            <button
-              onClick={() => setIsChatOpen(!isChatOpen)}
-              className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                isChatOpen 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              <MessageCircle className="w-4 h-4" />
-              <span>AI Assistant</span>
-            </button>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Analysis Display - Left Pane */}
+      <div className={`transition-all duration-300 ${
+        isChatExpanded ? 'w-1/2' : 'w-2/3'
+      } border-r border-gray-200`}>
+        <AnalysisDisplay
+          analysisResults={analysisResults}
+          productInput={productInput}
+          competitors={competitors}
+          onBackToChat={() => setCurrentView('chat')}
+        />
+      </div>
 
-      {/* Navigation */}
-      <nav className="bg-white border-b border-gray-200">
-        <div className="container mx-auto px-6">
-          <div className="flex space-x-8 overflow-x-auto">
-            {navigationItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id as any)}
-                  className={`flex items-center space-x-2 px-3 py-4 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
-                    activeTab === item.id
-                      ? 'border-blue-600 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </nav>
-
-      {/* Content */}
-      <main className={`container mx-auto px-6 py-8 transition-all duration-300 ${
-        isChatOpen ? 'mr-96' : ''
-      }`}>
-        {activeTab === 'profiles' && (
-          <CompetitorProfiles competitors={selectedCompetitors} />
-        )}
-        {activeTab === 'swot' && (
-          <SwotDashboard competitors={selectedCompetitors} />
-        )}
-        {activeTab === 'comparison' && (
-          <FeatureComparison 
-            productInput={productInput!} 
-            competitors={selectedCompetitors} 
-          />
-        )}
-        {activeTab === 'suggestions' && (
-          <EnhancementSuggestions 
-            productInput={productInput!}
-            competitors={selectedCompetitors} 
-          />
-        )}
-        {activeTab === 'notifications' && (
-          <NotificationSettings competitors={selectedCompetitors} />
-        )}
-        {activeTab === 'export' && (
-          <ExportShare 
-            productInput={productInput!}
-            competitors={selectedCompetitors} 
-          />
-        )}
-      </main>
-
-      {/* Chat Sidebar */}
-      <ChatSidebar 
-        isOpen={isChatOpen}
-        onClose={() => setIsChatOpen(false)}
-        productInput={productInput!}
-        competitors={selectedCompetitors}
-      />
+      {/* Chat Interface - Right Pane */}
+      <div className={`transition-all duration-300 ${
+        isChatExpanded ? 'w-1/2' : 'w-1/3'
+      } bg-white`}>
+        <ChatInterface
+          onAnalysisGenerated={handleAnalysisGenerated}
+          onProductUpdate={handleProductUpdate}
+          onCompetitorsUpdate={handleCompetitorsUpdate}
+          onViewAnalysis={() => setCurrentView('analysis')}
+          productInput={productInput}
+          competitors={competitors}
+          isCompact={!isChatExpanded}
+          onToggleExpand={() => setIsChatExpanded(!isChatExpanded)}
+        />
+      </div>
     </div>
   );
 }
